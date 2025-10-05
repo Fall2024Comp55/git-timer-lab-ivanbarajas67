@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 import acm.graphics.GLabel;
+import acm.graphics.GObject;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
@@ -89,8 +90,25 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
     }
 
     private void moveAllBallsOnce() {
+        ArrayList<GOval> ballsToRemove = new ArrayList<>();
+        ArrayList<GRect> enemiesToRemove = new ArrayList<>();
         for (GOval ball : balls) {
             ball.move(SPEED, 0);
+            double checkX = ball.getX() + SIZE;
+            double checkY = ball.getY() + SIZE / 2;
+            GObject obj = getElementAt(checkX, checkY);
+            if (obj instanceof GRect) {
+                enemiesToRemove.add((GRect) obj);
+                ballsToRemove.add(ball);
+            }
+        }
+        for (GRect e : enemiesToRemove) {
+            remove(e);
+            enemies.remove(e);
+        }
+        for (GOval b : ballsToRemove) {
+            remove(b);
+            balls.remove(b);
         }
     }
 
